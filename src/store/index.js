@@ -23,18 +23,17 @@ export default createStore({
   },
   actions: {
     setAllRooms({ commit }) {
-      console.log(process.env.VUE_APP_API_URL);
-      axios.get("http://localhost:3000/" + "rooms/")
+      axios.get(process.env.VUE_APP_API_URL + "rooms/")
           .then(response => commit('SET_ROOMS', response.data.rooms));
     },
 
     setRoomsFilteredByName({ commit }, filter){
       console.log("Dans le filter by name \n");
       console.log(filter);
-      let url = process.env.API_URL + 'rooms'
+      let url = process.env.VUE_APP_API_URL + 'rooms/'
       const filterTrim =  filter.trim();
       if(filterTrim.length){
-        url += '/name/'
+        url += 'name/'
       }
       axios.get( url + filterTrim)
           .then(response => commit('SET_ROOMS', response.data.rooms));
