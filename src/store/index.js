@@ -42,10 +42,10 @@ export default createStore({
     setRoomsFilteredByEquipement({ commit }, filter){
       console.log("Dans le filter by equipment \n");
       console.log(filter);
-      let url = process.env.API_URL + 'rooms'
+      let url = process.env.VUE_APP_API_URL + 'rooms/'
       const filterTrim =  filter.trim();
       if(filterTrim.length){
-        url += '/equipement/'
+        url += 'equipement/'
       }
       axios.get( url + filterTrim)
           .then(response => commit('SET_ROOMS', response.data.rooms));
