@@ -1,6 +1,6 @@
 <template>
   <div class="booking">
-    <h2>Réservation de la salle : {{ $route.params.name }}</h2>
+    <h2>Réservation de la salle : {{ $route.query.name }}</h2>
     <br>
     <div class="greyBack">
       <h3 style="margin-bottom: 10px">Choisissez le jour : </h3>
@@ -44,7 +44,7 @@ export default {
     }
   },
   beforeCreate() {
-    axios.post(process.env.VUE_APP_API_URL + "rooms/reservations", {name: this.$route.params.name})
+    axios.post(process.env.VUE_APP_API_URL + "rooms/reservations", {name: this.$route.query.name})
         .then(response => this.reservations = response.data.reservations);
   },
   mounted(){
@@ -76,17 +76,14 @@ export default {
       if(this.reservations && this.reservations.length>0){
         for(let i =0; i<this.reservations.length; i++){
           if(time.getTime() === new Date(this.reservations[i].begin).getTime() ){
-            console.log("Already booked");
             return true;
           }
         }
       }
-      console.log("Not already booked");
       return false;
     },
     addTimeToList(time){
       this.selectedValues.push(time);
-      console.log(this.selectedValues);
     },
     removeTimeFromList(time){
       for( let i = 0; i < this.selectedValues.length; i++){
@@ -94,10 +91,8 @@ export default {
           this.selectedValues.splice(i, 1);
         }
       }
-      console.log(this.selectedValues);
     },
     bookTheRoom(){
-      console.log(this.selectedValues);
       for(let i = 0; i<this.selectedValues.length; i++){
         const beginValue = new Date(this.selectedValues[i].time);
         let endValue = new Date(beginValue);
@@ -106,12 +101,11 @@ export default {
         endValue.setSeconds(beginValue.getSeconds()+59);
         const data = {
           reservation: {
-            roomName: this.$route.params.name,
+            roomName: this.$route.query.name,
             begin: beginValue,
             end: endValue
           }
         }
-        console.log(data);
         axios.post(process.env.VUE_APP_API_URL + 'rooms/reservation', data)
           .then(response => {
             console.log(response);

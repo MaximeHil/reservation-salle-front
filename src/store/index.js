@@ -17,7 +17,6 @@ export default new Vuex.Store({
   },
   mutations: {
     SET_ROOMS: (state, rooms) => {
-      console.log(rooms);
       while(state.rooms.length > 0) {
         state.rooms.pop();
       }
