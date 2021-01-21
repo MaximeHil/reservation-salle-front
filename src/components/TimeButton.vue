@@ -1,5 +1,7 @@
 <template>
-  <button class="btn btn-success spaced" @click="buttonClicked()">{{ timeToShow }}</button>
+  <button :class="{btn: true, 'btn-success': !booked&&!isSelected, 'btn-primary': !booked&&isSelected,  spaced: true, 'btn-danger': booked, disabled: booked}"
+          @click="buttonClicked()" :disabled="booked">{{ timeToShow }}
+          </button>
 </template>
 
 <script>
@@ -9,6 +11,15 @@ export default {
     timeSlot: {
       type: Date,
       required: true
+    },
+    booked: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data: function() {
+    return {
+      isSelected: false
     }
   },
   computed: {
@@ -18,12 +29,19 @@ export default {
   },
   methods: {
     buttonClicked(){
-      console.log(this.timeSlot);
+      this.isSelected = !this.isSelected;
+      if(this.isSelected){
+        this.$emit('addTimeToList', { time: this.timeSlot })
+      }else {
+        this.$emit('removeTimeFromList', {time: this.timeSlot})
+      }
     }
   }
 }
 </script>
 
 <style scoped>
+.disabled{
 
+}
 </style>

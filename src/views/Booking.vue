@@ -1,8 +1,5 @@
 <template>
   <div class="booking">
-    <button class="btn btn-danger" @click="$router.back()">Retour</button>
-    <br>
-    <br>
     <h2>Réservation de la salle : {{ $route.params.name }}</h2>
     <br>
     <div class="greyBack">
@@ -12,9 +9,15 @@
       <br>
       <h3 style="margin-bottom: 10px">Choisissez le créneau (2h) : </h3>
       <TimeButton :key="slot.getHours()" v-for="slot in slots"
-              class="btn btn-success spaced"
-              :timeSlot="slot"/>
+              :timeSlot="slot"
+              :booked="isAlreadyBooked(slot)"
+              @addTimeToList="addTimeToList"
+              @removeTimeFromList="removeTimeFromList"/>
+      <br>
     </div>
+    <button class="btn btn-danger" @click="$router.back()">Retour</button>
+    <button class="btn btn-primary spaced" style="margin-left: 15em"
+            @click="bookTheRoom">Valider</button>
   </div>
 </template>
 
@@ -36,7 +39,8 @@ export default {
       disabledDates: {
         days: [6, 0]
       },
-      slots: []
+      slots: [],
+      selectedValues: []
     }
   },
   beforeCreate() {
@@ -44,24 +48,79 @@ export default {
         .then(response => this.reservations = response.data.reservations);
   },
   mounted(){
-    let newDate = new Date(this.date);
-    newDate.setHours(8);
-    newDate.setMinutes(0);
-    newDate.setSeconds(0);
-    for(let i = 0; i<6; i++){
-      this.slots.push(new Date(newDate));
-      newDate.setHours(newDate.getHours() + 2);
-    }
+    this.changeSlots();
+  },
+  computed: {
+
   },
   methods: {
     pickerClosed(){
-      console.log(this.date);
-      let newDate = this.date;
-      newDate.setHours(10);
+      this.changeSlots();
+    },
+    changeSlots(){
+      while(this.slots.length > 0){
+        this.slots.pop();
+      }
+
+      let newDate = new Date(this.date);
+      newDate.setHours(8);
       newDate.setMinutes(0);
-      newDate.setMilliseconds(0);
       newDate.setSeconds(0);
-      console.log(newDate)
+      newDate.setMilliseconds(0);
+      for(let i = 0; i<6; i++){
+        this.slots.push(new Date(newDate));
+        newDate.setHours(newDate.getHours() + 2);
+      }
+    },
+    isAlreadyBooked(time){
+      if(this.reservations && this.reservations.length>0){
+        for(let i =0; i<this.reservations.length; i++){
+          if(time.getTime() === new Date(this.reservations[i].begin).getTime() ){
+            console.log("Already booked");
+            return true;
+          }
+        }
+      }
+      console.log("Not already booked");
+      return false;
+    },
+    addTimeToList(time){
+      this.selectedValues.push(time);
+      console.log(this.selectedValues);
+    },
+    removeTimeFromList(time){
+      for( let i = 0; i < this.selectedValues.length; i++){
+        if ( this.selectedValues[i].time.getTime() === time.time.getTime()) {
+          this.selectedValues.splice(i, 1);
+        }
+      }
+      console.log(this.selectedValues);
+    },
+    bookTheRoom(){
+      console.log(this.selectedValues);
+      for(let i = 0; i<this.selectedValues.length; i++){
+        const beginValue = new Date(this.selectedValues[i].time);
+        let endValue = new Date(beginValue);
+        endValue.setHours(beginValue.getHours()+1);
+        endValue.setMinutes(beginValue.getMinutes()+59);
+        endValue.setSeconds(beginValue.getSeconds()+59);
+        const data = {
+          reservation: {
+            roomName: this.$route.params.name,
+            begin: beginValue,
+            end: endValue
+          }
+        }
+        console.log(data);
+        axios.post(process.env.VUE_APP_API_URL + 'rooms/reservation', data)
+          .then(response => {
+            console.log(response);
+            if(i === this.selectedValues.length-1){
+              this.$router.replace('/');
+            }
+          })
+          .catch(error => console.log(error));
+      }
     }
   }
 }
