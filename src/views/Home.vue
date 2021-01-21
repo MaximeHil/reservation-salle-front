@@ -72,8 +72,4 @@ export default {
   margin-top: 2%;
 }
 
-.test{
-  border-radius: 5px;
-}
-
 </style>
