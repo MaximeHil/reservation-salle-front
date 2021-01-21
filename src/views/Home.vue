@@ -55,7 +55,7 @@ export default {
     RoomCardItem
   },
   methods: {
-      ...mapActions(['setAllRooms', 'setRoomsFilteredByName', 'setRoomsFilteredByEquipement']),
+    ...mapActions(['setAllRooms', 'setRoomsFilteredByName', 'setRoomsFilteredByEquipement']),
 
   },
   computed: {

@@ -1,7 +1,10 @@
-import { createStore } from 'vuex'
+import Vue from 'vue'
+import Vuex from 'vuex'
 import axios from "axios";
 
-export default createStore({
+Vue.use(Vuex)
+
+export default new Vuex.Store({
   state: {
     rooms:[
 
@@ -26,7 +29,6 @@ export default createStore({
       axios.get(process.env.VUE_APP_API_URL + "rooms/")
           .then(response => commit('SET_ROOMS', response.data.rooms));
     },
-
     setRoomsFilteredByName({ commit }, filter){
       console.log("Dans le filter by name \n");
       console.log(filter);

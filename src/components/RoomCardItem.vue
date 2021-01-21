@@ -15,9 +15,10 @@
 
     </div>
     <div class="card-footer text-center">
-      <button class="btn btn-primary">Reserver</button>
+      <button class="btn btn-primary" @click="$router.push({name:'Booking', params:{name}})">Reserver</button>
     </div>
   </div>
+
 </template>
 
 <script>
@@ -39,7 +40,9 @@ export default {
     equipements: {
       type: Array,
     }
-  }
+  },
+
+
 }
 </script>
 

@@ -1,4 +1,4 @@
-# reservation-salle-front
+# reservation-salle-v2
 
 ## Project setup
 ```

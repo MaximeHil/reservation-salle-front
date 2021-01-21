@@ -1,8 +1,7 @@
 <template>
-  <div id="nav">
-
+  <div id="app">
+    <router-view/>
   </div>
-  <router-view/>
 </template>
 
 <style lang="scss">
@@ -10,13 +9,12 @@
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  margin-left: 10%;
-  margin-right: 10%;
+  text-align: center;
   color: #2c3e50;
 }
 
-#nav {
-  padding: 30px;
+#app {
+  padding: 5%;
 
   a {
     font-weight: bold;
