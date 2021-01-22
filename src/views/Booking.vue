@@ -10,14 +10,12 @@
       <h3 style="margin-bottom: 10px">Choisissez le créneau (2h) : </h3>
       <TimeButton :key="slot.getHours()" v-for="slot in slots"
               :timeSlot="slot"
-              :booked="isAlreadyBooked(slot)"
-              @addTimeToList="addTimeToList"
-              @removeTimeFromList="removeTimeFromList"/>
+              :booked="isAlreadyBooked(slot)"/>
       <br>
     </div>
-    <button class="btn btn-danger" @click="$router.back()">Retour</button>
+    <button class="btn btn-danger" @click="goBack()">Retour</button>
     <button class="btn btn-primary spaced" style="margin-left: 15em"
-            @click="bookTheRoom">Valider</button>
+            @click="bookTheRoom" :disabled="!this.selectedValues.length > 0">Valider</button>
   </div>
 </template>
 
@@ -27,6 +25,7 @@ import axios from "axios";
 import TimeButton from "@/components/TimeButton";
 import Vue from 'vue';
 import VueToasted from 'vue-toasted';
+import {mapGetters} from "vuex";
 
 Vue.use(VueToasted, {
   iconPack : 'material' // set your iconPack, defaults to material. material|fontawesome|custom-class
@@ -47,7 +46,6 @@ export default {
         to: new Date(Date.now() - 8640000)
       },
       slots: [],
-      selectedValues: [],
       current: new Date()
     }
   },
@@ -59,10 +57,15 @@ export default {
     this.changeSlots();
   },
   computed: {
-
+    ...mapGetters(['selectedValues'])
   },
   methods: {
+    goBack(){
+      this.$store.commit('EMPTY_VALUES');
+      this.$router.back();
+    },
     pickerClosed(){
+      this.$store.commit('EMPTY_VALUES');
       this.changeSlots();
     },
     changeSlots(){
@@ -90,19 +93,9 @@ export default {
       }
       return false;
     },
-    addTimeToList(time){
-      this.selectedValues.push(time);
-    },
-    removeTimeFromList(time){
-      for( let i = 0; i < this.selectedValues.length; i++){
-        if ( this.selectedValues[i].time.getTime() === time.time.getTime()) {
-          this.selectedValues.splice(i, 1);
-        }
-      }
-    },
     bookTheRoom(){
       for(let i = 0; i<this.selectedValues.length; i++){
-        const beginValue = new Date(this.selectedValues[i].time);
+        const beginValue = new Date(this.selectedValues[i]);
         let endValue = new Date(beginValue);
         endValue.setHours(beginValue.getHours()+1);
         endValue.setMinutes(beginValue.getMinutes()+59);

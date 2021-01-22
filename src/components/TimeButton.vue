@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
   name: "TimeButton",
   props: {
@@ -19,21 +21,30 @@ export default {
   },
   data: function() {
     return {
-      isSelected: false
+      touched: false
     }
   },
   computed: {
     timeToShow (){
       return `${this.timeSlot.getHours()}h00`;
+    },
+    ...mapGetters(['selectedValues']),
+    isSelected(){
+      for(let i=0; i<this.selectedValues.length; i++){
+        if(this.timeSlot.getTime() === this.selectedValues[i].getTime()){
+          return true;
+        }
+      }
+      return this.touched;
     }
   },
   methods: {
     buttonClicked(){
-      this.isSelected = !this.isSelected;
-      if(this.isSelected){
-        this.$emit('addTimeToList', { time: this.timeSlot })
+      this.touched = !this.isSelected;
+      if(this.touched){
+        this.$store.commit('PUSH_VALUE', this.timeSlot)
       }else {
-        this.$emit('removeTimeFromList', {time: this.timeSlot})
+        this.$store.commit('REMOVE_VALUE', this.timeSlot)
       }
     }
   }

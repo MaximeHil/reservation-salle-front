@@ -8,11 +8,15 @@ export default new Vuex.Store({
   state: {
     rooms:[
 
-    ]
+    ],
+    selectedValues: []
   },
   getters: {
     rooms(state) {
       return state.rooms;
+    },
+    selectedValues(state) {
+      return state.selectedValues;
     }
   },
   mutations: {
@@ -21,6 +25,24 @@ export default new Vuex.Store({
         state.rooms.pop();
       }
       state.rooms.push(...rooms);
+    },
+    PUSH_VALUE: (state, value) => {
+      state.selectedValues.push(value);
+    },
+    POP_VALUE: (state) => {
+      state.selectedValues.pop();
+    },
+    REMOVE_VALUE: (state, value) => {
+      for( let i = 0; i < state.selectedValues.length; i++){
+        if ( state.selectedValues[i].getTime() === value.getTime()) {
+          state.selectedValues.splice(i, 1);
+        }
+      }
+    },
+    EMPTY_VALUES: (state) => {
+      while (state.selectedValues.length > 0){
+        state.selectedValues.pop();
+      }
     }
   },
   actions: {
