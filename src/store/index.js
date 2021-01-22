@@ -56,9 +56,9 @@ export default new Vuex.Store({
       const data = {
         name: payload.name.trim(),
         equipement: payload.equipement,
-        capacity: payload.capacity ? payload.capacity : 0
+        capacity: payload.capacity ? payload.capacity : 0,
+        date: payload.date
       };
-      console.log(data);
       axios.post( process.env.VUE_APP_API_URL + 'rooms/filter', data)
           .then(response => commit('SET_ROOMS', response.data.rooms));
     }

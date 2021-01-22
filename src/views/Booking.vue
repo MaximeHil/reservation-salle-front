@@ -43,10 +43,12 @@ export default {
       reservations: [],
       date: new Date(),
       disabledDates: {
-        days: [6, 0]
+        days: [6, 0],
+        to: new Date(Date.now() - 8640000)
       },
       slots: [],
-      selectedValues: []
+      selectedValues: [],
+      current: new Date()
     }
   },
   beforeCreate() {
