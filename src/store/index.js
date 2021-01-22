@@ -50,6 +50,17 @@ export default new Vuex.Store({
       }
       axios.get( url + filterTrim)
           .then(response => commit('SET_ROOMS', response.data.rooms));
+    },
+
+    setRoomsFiltered({commit}, payload){
+      const data = {
+        name: payload.name.trim(),
+        equipement: payload.equipement,
+        capacity: payload.capacity ? payload.capacity : 0
+      };
+      console.log(data);
+      axios.post( process.env.VUE_APP_API_URL + 'rooms/filter', data)
+          .then(response => commit('SET_ROOMS', response.data.rooms));
     }
   },
   modules: {

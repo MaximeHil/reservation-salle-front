@@ -16,7 +16,7 @@
 
       </div>
       <div class="card-footer text-center">
-        <button class="btn btn-primary" @click="$router.push({name:'Booking', query:{name}})">Reserver</button>
+        <button class="btn btn-success" @click="$router.push({name:'Booking', query:{name}})">Reserver</button>
       </div>
     </div>
   </transition>

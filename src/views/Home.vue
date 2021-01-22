@@ -1,22 +1,27 @@
 <template>
   <div class="home">
+    <form @submit="checkForm">
+      <div class="form-row">
+        <div class="form-group col-md-2">
+          <label for="inputName">Nom</label>
+          <input type="text" class="form-control" id="inputName" v-model="nameFilter">
+        </div>
+        <div class="form-group col-md-3">
+          <label for="inputEquipement">Equipement</label>
+          <select id="inputEquipement" class="form-control" v-model="equipementFilter">
+            <option></option>
+            <option >TV</option>
+            <option >Retro projecteur</option>
+          </select>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="inputCapacity">Capacité minimale</label>
+          <input type="number" class="form-control" id="inputCapacity" min="0" v-model="capacityFilter">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Filtrer</button>
+    </form>
 
-    <div class="input-group">
-      <input type="text" v-model="nameFilter"
-             @keyup.enter="setRoomsFilteredByName(nameFilter)"
-             class="form-control" aria-label=""
-             style="margin-left: 4%; margin-right: 1%">
-      <div class="input-group-append" style="margin-right: 4%">
-        <button class="btn btn-secondary" @click="setRoomsFilteredByName(nameFilter)">Filter by name</button>
-      </div>
-      <input type="text" v-model="equipementFilter"
-             @keyup.enter="setRoomsFilteredByEquipement(equipementFilter)"
-             class="form-control" aria-label=""
-             style="margin-left: 4%; margin-right: 1%">
-      <div class="input-group-append" style="margin-right: 4%">
-        <button class="btn btn-secondary test" @click="setRoomsFilteredByEquipement(equipementFilter)">Filter by equipment</button>
-      </div>
-    </div>
     <div class="card-deck">
       <RoomCardItem v-for="room in rooms"
                     :key="room.name"
@@ -48,6 +53,7 @@ export default {
     return {
       nameFilter: '',
       equipementFilter: '',
+      capacityFilter: 0
     }
   },
   components: {
@@ -55,14 +61,24 @@ export default {
     RoomCardItem
   },
   methods: {
-    ...mapActions(['setAllRooms', 'setRoomsFilteredByName', 'setRoomsFilteredByEquipement']),
-
+    ...mapActions(['setAllRooms', 'setRoomsFiltered']),
+    checkForm: function (e){
+      e.preventDefault();
+      const payload = {
+        name: this.nameFilter,
+        equipement: this.equipementFilter,
+        capacity: this.capacityFilter
+      }
+      this.setRoomsFiltered(payload);
+    }
   },
   computed: {
     ...mapGetters(['rooms'])
   },
   mounted() {
-    this.setAllRooms();
+    if(this.rooms.length === 0){
+      this.setAllRooms();
+    }
   },
 }
 </script>
