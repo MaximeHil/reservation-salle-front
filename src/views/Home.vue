@@ -39,8 +39,8 @@
 <script>
 // @ is an alias to /src
 import { mapGetters, mapActions } from 'vuex'
-//import RoomItem from "@/components/RoomItem";
 import RoomCardItem from "@/components/RoomCardItem";
+
 export default {
   name: 'Home',
 

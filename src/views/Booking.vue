@@ -25,6 +25,12 @@
 import Datepicker from 'vuejs-datepicker';
 import axios from "axios";
 import TimeButton from "@/components/TimeButton";
+import Vue from 'vue';
+import VueToasted from 'vue-toasted';
+
+Vue.use(VueToasted, {
+  iconPack : 'material' // set your iconPack, defaults to material. material|fontawesome|custom-class
+});
 
 export default {
   name: 'Booking',
@@ -111,6 +117,16 @@ export default {
             console.log(response);
             if(i === this.selectedValues.length-1){
               this.$router.replace('/');
+              this.$toasted.success('Réservation faite !', {
+                action: {
+                  text : 'Fermer',
+                  onClick : (e, toastObject) => {
+                    toastObject.goAway(0);
+                  }
+                },
+                position: "bottom-center",
+                duration: 5000
+              });
             }
           })
           .catch(error => console.log(error));
