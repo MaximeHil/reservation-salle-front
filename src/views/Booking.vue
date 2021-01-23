@@ -42,7 +42,6 @@ export default {
       reservations: [],
       date: new Date(),
       disabledDates: {
-        days: [6, 0],
         to: new Date(Date.now() - 8640000)
       },
       slots: [],
@@ -122,6 +121,7 @@ export default {
                 position: "bottom-center",
                 duration: 5000
               });
+              this.$store.commit('EMPTY_VALUES');
             }
           })
           .catch(error => console.log(error));

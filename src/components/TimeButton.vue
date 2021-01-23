@@ -21,7 +21,6 @@ export default {
   },
   data: function() {
     return {
-      touched: false
     }
   },
   computed: {
@@ -35,13 +34,13 @@ export default {
           return true;
         }
       }
-      return this.touched;
+      return false;
     }
   },
   methods: {
     buttonClicked(){
-      this.touched = !this.isSelected;
-      if(this.touched){
+      //this.touched = !this.isSelected;
+      if(!this.isSelected){
         this.$store.commit('PUSH_VALUE', this.timeSlot)
       }else {
         this.$store.commit('REMOVE_VALUE', this.timeSlot)
